@@ -75,7 +75,7 @@ Mesh chargerModele(const char* filepath) {
     
     Mesh.vertices = new Vertex[Mesh.vertexCount];
     
-    for(size_t i = 0; i < Mesh.vertexCount; i++) {
+    for(uint32_t i = 0; i < Mesh.vertexCount; i++) {
         Mesh.vertices[i] = sommetsTemporaires[i];
     }
 
@@ -87,7 +87,7 @@ void afficherMesh(Mesh& mesh) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glBegin(GL_TRIANGLES);
 
-    for (size_t i = 0; i < mesh.vertexCount; i++) {
+    for (uint32_t i = 0; i < mesh.vertexCount; i++) {
         float x = mesh.vertices[i].position.x;
         float y = mesh.vertices[i].position.y;
         float z = mesh.vertices[i].position.z;
