@@ -110,7 +110,10 @@ void affichage(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -5.0f); 
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    float temps = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    
+    glRotatef(temps * 50.0f, 0.0f, 1.0f, 0.0f);
     afficherMesh(MeshGlobal);
 
     glFlush();
