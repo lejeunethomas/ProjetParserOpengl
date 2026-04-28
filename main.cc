@@ -37,7 +37,7 @@ Mesh chargerModele(const char* filepath) {
     if (!err.empty()) { std::cerr << "Erreur: " << err << std::endl; }
     if (!ret) { exit(1); }
 
-    std::vector<Vertex> sommetsTemporaires;
+    std::vector<Vertex> TempVertex;
 
     for (size_t s = 0; s < shapes.size(); s++) {
         
@@ -64,19 +64,19 @@ Mesh chargerModele(const char* filepath) {
                     vertex.texcoords.y = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
                 }
 
-                sommetsTemporaires.push_back(vertex);
+                TempVertex.push_back(vertex);
             }
             index_offset += 3;
         }
     }
 
     Mesh Mesh;
-    Mesh.vertexCount = sommetsTemporaires.size();
+    Mesh.vertexCount = TempVertex.size();
     
     Mesh.vertices = new Vertex[Mesh.vertexCount];
     
     for(uint32_t i = 0; i < Mesh.vertexCount; i++) {
-        Mesh.vertices[i] = sommetsTemporaires[i];
+        Mesh.vertices[i] = TempVertex[i];
     }
 
     return Mesh;
