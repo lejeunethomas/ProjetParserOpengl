@@ -2,7 +2,8 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
-#include <iostream>
+#include <GL/glut.h>
+#include <math.h>
 
 struct vec2 {
     float x, y;
@@ -133,7 +134,7 @@ int main(int argc, char** argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    MeshGlobal = chargerModele("modele.obj");
+    MeshGlobal = chargerModele("C:/Users/thoma/Downloads/6e48z1kc7r40-bugatti/bugatti/bugatti.obj");
 
     glutDisplayFunc(affichage);
     glutMainLoop();
