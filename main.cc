@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    MeshGlobal = chargerModele("C:/Users/thoma/Downloads/6e48z1kc7r40-bugatti/bugatti/bugatti.obj");
+    MeshGlobal = chargerModele("");
 
     glutDisplayFunc(affichage);
     glutMainLoop();
