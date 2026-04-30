@@ -4,6 +4,8 @@
 #include <vector>
 #include <GL/glut.h>
 #include <math.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 struct vec2 {
     float x, y;
@@ -25,6 +27,7 @@ struct Mesh {
 };
 
 Mesh MeshGlobal;
+GLuint Texture;
 
 Mesh chargerModele(const char* filepath) {
     tinyobj::attrib_t attrib;
@@ -83,9 +86,39 @@ Mesh chargerModele(const char* filepath) {
     return Mesh;
 }
 
+GLuint chargerTexture(const char* filepath) {
+    GLuint texID = 0;
+    int w, h, comp;
+
+    uint8_t* data = stbi_load(filepath, &w, &h, &comp, STBI_rgb_alpha);
+
+    if (data == nullptr) {
+        std::cerr << "Erreur: Impossible de charger l'image texture " << filepath << std::endl;
+        return 0;
+    }
+
+    glGenTextures(1, &texID);
+
+    glBindTexture(GL_TEXTURE_2D, texID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    stbi_image_free(data);
+
+    return texID;
+}
+
 void afficherMesh(Mesh& mesh) {
-    
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, Texture);
     glBegin(GL_TRIANGLES);
 
     for (uint32_t i = 0; i < mesh.vertexCount; i++) {
@@ -93,12 +126,14 @@ void afficherMesh(Mesh& mesh) {
         float y = mesh.vertices[i].position.y;
         float z = mesh.vertices[i].position.z;
 
-        glColor3f(fabs(x), fabs(y), fabs(z));
+        glTexCoord2f(mesh.vertices[i].texcoords.x, mesh.vertices[i].texcoords.y);
         
+        glNormal3f(mesh.vertices[i].normal.x, mesh.vertices[i].normal.y, mesh.vertices[i].normal.z);
         glVertex3f(x, y, z);
     }
 
     glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void libererMesh(Mesh& mesh) {
@@ -111,7 +146,7 @@ void affichage(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -5.0f);
+    glTranslatef(2.0f, -5.0f, -6.0f);
     float temps = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
     
     glRotatef(temps * 50.0f, 0.0f, 1.0f, 0.0f);
@@ -133,7 +168,9 @@ int main(int argc, char** argv) {
     gluPerspective(45.0, 800.0 / 600.0, 0.1f, 1000.0f);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
 
+    Texture = chargerTexture("");
     MeshGlobal = chargerModele("");
 
     glutDisplayFunc(affichage);
